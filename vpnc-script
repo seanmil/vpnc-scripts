@@ -254,7 +254,8 @@ if [ -n "$IPROUTE" ]; then
 		NETWORK="$1"
 		NETMASK="$2"
 		NETMASKLEN="$3"
-		$IPROUTE route $route_syntax_del "$NETWORK/$NETMASKLEN" dev "$TUNDEV"
+		# Quiet stderr because interface may no longer exist at this stage:
+		$IPROUTE route $route_syntax_del "$NETWORK/$NETMASKLEN" dev "$TUNDEV" 2>/dev/null
 		$IPROUTE route flush cache
 	}
 
@@ -780,7 +781,7 @@ do_disconnect() {
 
 	if [ -n "$IPROUTE" ]; then
 		if [ -n "$INTERNAL_IP4_ADDRESS" ]; then
-			$IPROUTE addr del "$INTERNAL_IP4_ADDRESS/255.255.255.255" peer "$INTERNAL_IP4_ADDRESS" dev "$TUNDEV"
+			$IPROUTE addr del "$INTERNAL_IP4_ADDRESS/255.255.255.255" peer "$INTERNAL_IP4_ADDRESS" dev "$TUNDEV" 2>/dev/null
 		fi
 		# If the netmask is provided, it contains the address _and_ netmask
 		if [ -n "$INTERNAL_IP6_ADDRESS" ] && [ -z "$INTERNAL_IP6_NETMASK" ]; then
