@@ -389,7 +389,9 @@ EOF
 				;;
 			search*)
 				if [ -n "$CISCO_DEF_DOMAIN" ]; then
-					LINE="$LINE $CISCO_DEF_DOMAIN"
+					# Juniper VPNs can send comma separated domain
+					# search orders:
+					LINE="$LINE ${CISCO_DEF_DOMAIN//,/ }"
 					CISCO_DEF_DOMAIN=""
 				fi
 				;;
